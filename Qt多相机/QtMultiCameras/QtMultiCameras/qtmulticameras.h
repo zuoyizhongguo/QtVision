@@ -33,4 +33,6 @@ private:
     BaslerCamera* m_cam2;
 
     QTimer* timer;
+
+    bool isCameraWork;      //是否有相机连接。用于UI关闭
 };

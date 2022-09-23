@@ -15,10 +15,16 @@ QtMultiCameras::QtMultiCameras(QWidget *parent)
     qDebug() << "Main:" << QThread::currentThreadId();  
 
     setButtonStatus(true, false);
+    isCameraWork = false;
 }
 
 QtMultiCameras::~QtMultiCameras()
 {
+    if (isCameraWork)
+    {
+        closeCamera();
+    }
+    
     delete ui;
 }
 
@@ -38,16 +44,18 @@ void QtMultiCameras::openCamera()
     connect(timer, &QTimer::timeout, m_cam2, &BaslerCamera::updateImage);
 
     setButtonStatus(false, true);
+    isCameraWork = true;
 }
 
 void QtMultiCameras::startGrab()
 {
-    m_cam1->startGrab();    //拉流在子线程中进行（封装在BaslerCamera类中了）
-    m_cam2->startGrab();    
-        
-    timer->start(100);      //UI显示帧率
+    if (m_cam1->startGrab() && m_cam2->startGrab()) //拉流在子线程中进行（封装在BaslerCamera类中了）
+    {
+        timer->start(1);      //UI显示帧率
 
-    setButtonStatus(false, false);
+        setButtonStatus(false, false);
+    }   
+
 }
 
 void QtMultiCameras::stopGrab()
@@ -89,18 +97,17 @@ void QtMultiCameras::closeCamera()
     ui->label_show1->clear();
     ui->label_show2->clear();
     setButtonStatus(true, false);
+    isCameraWork = false;
 }
 
 void QtMultiCameras::slotShowImg(QImage img)
 {
-    qDebug() << "show1" << QThread::currentThreadId();
     QPixmap pix = QPixmap::fromImage(img);
     ui->label_show1->setPixmap(pix);
     ui->label_show1->setScaledContents(true); //图像适应label大小
 }
 void QtMultiCameras::slotShowImg2(QImage img)
 {
-    qDebug() << "show2" << QThread::currentThreadId();
     QPixmap pix = QPixmap::fromImage(img);
     ui->label_show2->setPixmap(pix);
     ui->label_show2->setScaledContents(true); //图像适应label大小
@@ -112,4 +119,5 @@ void QtMultiCameras::setButtonStatus(bool canOpen, bool canGrab)
     ui->pushButton_closeCamera->setEnabled(!canOpen);
     ui->pushButton_startGrab->setEnabled(!canOpen && canGrab);  //拉流、停止拉流 逻辑互斥
     ui->pushButton_stopGrab->setEnabled(!canOpen && !canGrab);
+    QApplication::processEvents();
 }

@@ -7,6 +7,9 @@
 #include <QThread>
 #include <QtConcurrent>
 
+#include <QMutex>
+#include <QMutexLocker>
+
 using namespace Pylon;
 
 class BaslerCamera  : 	public QObject
@@ -24,7 +27,7 @@ public:
 
 
 	void grabbed();										//线程函数，获取帧
-	void toQImage(CGrabResultPtr ptrGrabResult, QImage &OutImage);
+	bool toQImage(const CGrabResultPtr& ptrGrabResult, QImage &OutImage);
 	void updateImage();
 	
 
@@ -38,7 +41,7 @@ private:
 	QString m_sn;										//相机的序列号
 	Pylon::CInstantCamera* m_baslerCamera;				//相机
 	Pylon::CGrabResultPtr  m_ptrGrabResult;				//实时帧
-	Pylon::CGrabResultPtr* m_ptrGrabResult_success;		//成功获取的帧	
+	Pylon::CGrabResultPtr m_ptrGrabResult_success;		//成功获取的帧	
 
 	//帧率统计，固定时间间隔统计帧数法
 	int m_iFps;
@@ -46,4 +49,7 @@ private:
 	DWORD m_lastTime, m_curTime;
 
 	CPylonImage* img;
+
+	QMutex m_mutex;
+	//CPylonImage copyImg;
 };

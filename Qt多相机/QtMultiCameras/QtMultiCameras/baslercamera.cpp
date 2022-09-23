@@ -52,7 +52,7 @@ bool BaslerCamera::startGrab()
 		
 		//qDebug() << "相机开始拉流！";
 		
-		QtConcurrent::run(this,&BaslerCamera::grabbed);	//线程中执行死循环
+		f=QtConcurrent::run(this,&BaslerCamera::grabbed);	//线程中执行死循环
 	}
 	catch (const std::exception&)
 	{
@@ -71,6 +71,7 @@ bool BaslerCamera::stopGrab()
 			qDebug() << "相机停止拉流"<<m_baslerCamera->GetDeviceInfo().GetModelName();
 			m_baslerCamera->StopGrabbing();	
 			//m_ptrGrabResult_success.Release();		//如果不释放，toQImage中方式一报tempImg.GetBuffer()访问冲突
+			f.waitForFinished();
 		}
 	}
 	catch (const std::exception&)
@@ -116,7 +117,7 @@ void BaslerCamera::grabbed()						//线程函数，获取帧
 
 	while (m_baslerCamera->IsGrabbing())
 	{
-		//QMutexLocker lock(&m_mutex);	//加锁会影响到相机的帧率，toQImage中已经判断 m_ptrGrabResult_success，不再加锁。
+		//QMutexLocker lock(&m_mutex);	//加锁会影响到相机的帧率，toQImage中已经判断 m_ptrGrabResult_success，不再加锁。		
 		if (m_baslerCamera->RetrieveResult(5000, m_ptrGrabResult, TimeoutHandling_Return) && m_ptrGrabResult->GrabSucceeded() )
 		{			
 			m_ptrGrabResult_success = m_ptrGrabResult;	//深拷贝帧，调试可以看出创建时有自己单独内存

@@ -51,5 +51,5 @@ private:
 	CPylonImage* img;
 
 	QMutex m_mutex;
-	//CPylonImage copyImg;
+	QFuture<void> f;
 };

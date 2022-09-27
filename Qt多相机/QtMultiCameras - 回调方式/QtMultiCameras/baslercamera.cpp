@@ -182,7 +182,7 @@ bool BaslerCamera::toQImage(const CGrabResultPtr& ptrGrabResult, QImage& OutImag
 //转换并输出给UI展示
 void BaslerCamera::updateImage()
 {
-	QMutexLocker lock(&m_mutex); //m_ptrGrabResult_success在转换时可能被grabbed函数清空
+	QMutexLocker lock(&m_mutex); //m_ptrGrabResult在转换时可能被回调函数清空
 	if (toQImage(m_ptrGrabResult, qImage))
 	{
 		emit sigCurrentImage(qImage);

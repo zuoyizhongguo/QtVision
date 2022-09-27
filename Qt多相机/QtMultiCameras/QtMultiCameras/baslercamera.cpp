@@ -45,13 +45,13 @@ bool BaslerCamera::startGrab()
 	}
 	try
 	{
-		if (!m_baslerCamera->IsGrabbing())
+		if (m_baslerCamera->IsGrabbing())
 		{
-			m_baslerCamera->StartGrabbing(Pylon::GrabStrategy_LatestImageOnly);  //使用GrabStrategy_LatestImages。因为GrabStrategy_OneByOne会有很多缓存图，处理的可能不是最新的。
+			m_baslerCamera->StopGrabbing();			
 		}
 		
 		//qDebug() << "相机开始拉流！";
-		
+		m_baslerCamera->StartGrabbing(Pylon::GrabStrategy_LatestImageOnly);  //GrabStrategy_LatestImageOnly 使用GrabStrategy_LatestImages。因为GrabStrategy_OneByOne会有很多缓存图，处理的可能不是最新的。
 		f=QtConcurrent::run(this,&BaslerCamera::grabbed);	//线程中执行死循环
 	}
 	catch (const std::exception&)
@@ -113,11 +113,10 @@ bool BaslerCamera::closeCamera()
 
 void BaslerCamera::grabbed()						//线程函数，获取帧
 {
-	qDebug() << "相机开始拉流"<<m_baslerCamera->GetDeviceInfo().GetModelName() << QThread::currentThreadId();
-
 	while (m_baslerCamera->IsGrabbing())
 	{
-		//QMutexLocker lock(&m_mutex);	//加锁会影响到相机的帧率，toQImage中已经判断 m_ptrGrabResult_success，不再加锁。		
+		qDebug() << "相机开始拉流" << m_baslerCamera->GetDeviceInfo().GetModelName() << QThread::currentThreadId();
+		QMutexLocker lock(&m_mutex);	//加锁会影响到相机的帧率，m_ptrGrabResult_success会有读写冲突，必须加锁。		
 		if (m_baslerCamera->RetrieveResult(5000, m_ptrGrabResult, TimeoutHandling_Return) && m_ptrGrabResult->GrabSucceeded() )
 		{			
 			m_ptrGrabResult_success = m_ptrGrabResult;	//深拷贝帧，调试可以看出创建时有自己单独内存
@@ -167,14 +166,14 @@ bool BaslerCamera::toQImage(const CGrabResultPtr& ptrGrabResult, QImage& OutImag
 				fc.OutputPixelFormat = PixelType_RGB8packed;//通过官方函数先转为 RGB8
 				CPylonImage tempImg, copyImg;
 				
-				//方式一：可能导致tempImg.GetBuffer()发生访问冲突。如果想使用，可以在stopGrab()函数中 Release()
-				//fc.Convert(tempImg, ptrGrabResult);			
-				//uchar* buffer = (uchar*)tempImg.GetBuffer();
+				//方式一：可能导致tempImg.GetBuffer()发生访问冲突。可以在stopGrab()函数中 Release()
+				fc.Convert(tempImg, ptrGrabResult);			
+				uchar* buffer = (uchar*)tempImg.GetBuffer();
 
-				//方式二：无问题，很稳
-				tempImg.AttachGrabResultBuffer(ptrGrabResult);
-				fc.Convert(copyImg, tempImg);				//此函数可能失败，因此放到try中			
-				uchar* buffer = (uchar*)copyImg.GetBuffer();
+				//方式二：
+				//tempImg.AttachGrabResultBuffer(ptrGrabResult);
+				//fc.Convert(copyImg, tempImg);				//此函数可能失败，因此放到try中			
+				//uchar* buffer = (uchar*)copyImg.GetBuffer();
 				
 				OutImage = QImage(buffer, width, height, QImage::Format_RGB888).copy();
 			}
@@ -197,7 +196,7 @@ bool BaslerCamera::toQImage(const CGrabResultPtr& ptrGrabResult, QImage& OutImag
 //转换并输出给UI展示
 void BaslerCamera::updateImage()
 {
-	//QMutexLocker lock(&m_mutex); //m_ptrGrabResult_success在转换时可能被grabbed函数清空
+	QMutexLocker lock(&m_mutex); //m_ptrGrabResult_success在转换时可能被grabbed函数清空
 	if (toQImage(m_ptrGrabResult_success, qImage))
 	{
 		emit sigCurrentImage(qImage);

@@ -49,7 +49,7 @@ void QtMultiCameras::openCamera()
 
 void QtMultiCameras::startGrab()
 {
-    if (m_cam1->startGrab() && m_cam2->startGrab()) //拉流在子线程中进行（封装在BaslerCamera类中了）
+    if (m_cam1->startGrab() && m_cam2->startGrab()) //拉流在回调函数中进行（效率高于自己写的线程死循环）
     {
         timer.start(100);      //UI显示帧率
 

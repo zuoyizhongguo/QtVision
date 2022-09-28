@@ -1,3 +1,6 @@
+#### 【目录】
+QtMultiCameras，是自己写线程死循环方式  
+QtMultiCameras - 回调方式，是官方回调函数方式【推荐】
 #### 【展示】
 ![Image text](https://github.com/zuoyizhongguo/QtVision/blob/main/Qt%E5%A4%9A%E7%9B%B8%E6%9C%BA/images/sample.gif) 
 #### 【说明】

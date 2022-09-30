@@ -98,8 +98,8 @@ bool BaslerCamera::closeCamera()
 				m_baslerCamera->StopGrabbing();
 			}
 			qDebug() << "相机关闭" << m_baslerCamera->GetDeviceInfo().GetModelName();
+			m_baslerCamera->Close();				//先关闭，再分离
 			m_baslerCamera->DetachDevice();			//分离pylon设备
-			m_baslerCamera->Close();
 		}
 	}
 	catch (const std::exception&)

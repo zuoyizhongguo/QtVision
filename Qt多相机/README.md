@@ -1,7 +1,7 @@
 #### 【开发工具】
-VS2019
-QWidget版本Qt 5.15.2
-QtQuick版本Qt 6.3.2
+VS2019  
+QWidget版本Qt 5.15.2  
+QtQuick版本Qt 6.3.2  
 #### 【目录】
 QtMultiCameras，是自己写线程死循环方式，QWidget开发的。  
 QtMultiCameras - 回调方式，是官方回调函数方式【推荐】，QWidget开发的。  

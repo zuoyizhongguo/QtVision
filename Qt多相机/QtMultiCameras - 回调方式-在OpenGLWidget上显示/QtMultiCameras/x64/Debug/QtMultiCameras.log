@@ -1,0 +1,10 @@
+﻿  Reading Qt configuration (C:/Qt/5.15.2/msvc2019_64/bin/qmake)
+  baslercamera.cpp
+  myglwidget.cpp
+  qtmulticameras.cpp
+  main.cpp
+  qrc_qtmulticameras.cpp
+  moc_qtmulticameras.cpp
+  moc_baslercamera.cpp
+  moc_myglwidget.cpp
+  QtMultiCameras.vcxproj -> C:\Users\gongzuozhan-public\source\repos\QtMultiCameras - 回调方式-在OpenGLWidget上显示\x64\Debug\QtMultiCameras.exe

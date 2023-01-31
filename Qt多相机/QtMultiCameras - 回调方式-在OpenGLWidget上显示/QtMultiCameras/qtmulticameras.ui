@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>QtMultiCamerasClass</class>
+ <widget class="QWidget" name="QtMultiCamerasClass">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>998</width>
+    <height>480</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>QtMultiCameras</string>
+  </property>
+  <widget class="QPushButton" name="pushButton_openCamera">
+   <property name="geometry">
+    <rect>
+     <x>280</x>
+     <y>410</y>
+     <width>75</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>打开相机</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_closeCamera">
+   <property name="geometry">
+    <rect>
+     <x>550</x>
+     <y>410</y>
+     <width>75</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>关闭相机</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_startGrab">
+   <property name="geometry">
+    <rect>
+     <x>370</x>
+     <y>410</y>
+     <width>75</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>开始拉流</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_stopGrab">
+   <property name="geometry">
+    <rect>
+     <x>460</x>
+     <y>410</y>
+     <width>75</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>暂停拉流</string>
+   </property>
+  </widget>
+  <widget class="QWidget" name="verticalLayoutWidget">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>60</y>
+     <width>451</width>
+     <height>321</height>
+    </rect>
+   </property>
+   <layout class="QVBoxLayout" name="verticalLayout"/>
+  </widget>
+  <widget class="QWidget" name="verticalLayoutWidget_2">
+   <property name="geometry">
+    <rect>
+     <x>500</x>
+     <y>60</y>
+     <width>451</width>
+     <height>321</height>
+    </rect>
+   </property>
+   <layout class="QVBoxLayout" name="verticalLayout_2"/>
+  </widget>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources>
+  <include location="qtmulticameras.qrc"/>
+ </resources>
+ <connections/>
+</ui>
